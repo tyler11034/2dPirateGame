@@ -1,0 +1,15 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class StartGameScript : MonoBehaviour
+{
+    public void StartGame(string SceneName)
+    {
+        // This method is called when the Start Game Button is clicked
+        SceneManager.LoadScene(SceneName); // Replace "BattleScene" with the actual name of your BattleScene
+
+
+    }
+}
