@@ -1,0 +1,66 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class EnemyScript : MonoBehaviour
+{
+    public int maxHealth = 3;       // Maximum health of the enemy
+    private int currentHealth;       // Current health of the enemy
+    public float moveSpeed = 2f;    // Forward and backward movement speed
+    public float turnSpeed = 100f;  // Turning speed
+
+    private Transform player;       // Reference to the player's transform
+
+    private void Start()
+    {
+        currentHealth = maxHealth; // Initialize health
+        player = GameObject.FindGameObjectWithTag("Player").transform; // Find the player's transform
+    }
+
+    private void Update()
+    {
+        ChasePlayer(); // Call the ChasePlayer method
+    }
+
+    private void ChasePlayer()
+    {
+        if (player != null)
+        {
+            // Calculate the direction to the player
+            Vector2 direction = player.position - transform.position;
+
+            // Calculate the angle between the enemy's forward and the direction to the player
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+
+            // Rotate the enemy towards the player
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, angle), turnSpeed * Time.deltaTime);
+
+            // Move forward
+            transform.Translate(Vector2.up * moveSpeed * Time.deltaTime);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Projectile"))
+        {
+            TakeDamage(1); // Adjust the damage value as needed
+        }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+
+        if (currentHealth <= 0)
+        {
+            Die(); // Call the Die method when health is depleted
+        }
+    }
+
+    private void Die()
+    {
+        // You can add any death animations or effects here
+        Destroy(gameObject);
+    }
+}
