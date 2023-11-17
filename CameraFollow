@@ -1,0 +1,21 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CameraFollow : MonoBehaviour
+{
+    public Transform target; // Reference to the player's transform
+    public float smoothSpeed = 0.5f; // Adjustable smoothness of camera movement
+
+    void LateUpdate()
+    {
+        if (target != null)
+        {
+            // Calculate the target position with a slight offset
+            Vector3 desiredPosition = new Vector3(target.position.x, target.position.y, transform.position.z);
+
+            // Smoothly move the camera towards the target position
+            transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
+        }
+    }
+}
