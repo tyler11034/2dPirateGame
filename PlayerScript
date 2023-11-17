@@ -1,0 +1,103 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class PlayerScript : MonoBehaviour
+{
+    public int maxHealth = 5;          // Maximum health of the player
+    private int currentHealth;         // Current health of the player
+    public float moveSpeed = 5f;       // Forward and backward movement speed
+    public float turnSpeed = 200f;     // Turning speed
+    public GameObject projectilePrefab; // Reference to the projectile prefab
+    public Transform firePoint;        // Point from where projectiles are fired
+    public float projectileSpeed = 10f; // Speed of the projectiles
+    public float fireCooldown = 1f;     // Cooldown period between firing projectiles
+    private float nextFireTime;         // Time when the player can fire again
+
+    private void Start()
+    {
+        currentHealth = maxHealth;     // Initialize health
+        nextFireTime = 0f;             // Initialize the next fire time
+    }
+
+    private void Update()
+    {
+        // For testing purposes, you can simulate damage by pressing the "K" key
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            TakeDamage(1);
+        }
+
+        // Handle player movement and turning
+        HandleMovement();
+
+        // Fire projectiles with the spacebar, respecting the cooldown
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time >= nextFireTime)
+        {
+            FireProjectile();
+        }
+    }
+
+    private void HandleMovement()
+    {
+        // Move forward with W
+        if (Input.GetKey(KeyCode.W))
+        {
+            transform.Translate(Vector2.up * moveSpeed * Time.deltaTime);
+        }
+
+        // Move backward with S
+        if (Input.GetKey(KeyCode.S))
+        {
+            transform.Translate(Vector2.down * moveSpeed * Time.deltaTime);
+        }
+
+        // Turn left with A
+        if (Input.GetKey(KeyCode.A))
+        {
+            transform.Rotate(Vector3.forward * turnSpeed * Time.deltaTime);
+        }
+
+        // Turn right with D
+        if (Input.GetKey(KeyCode.D))
+        {
+            transform.Rotate(Vector3.back * turnSpeed * Time.deltaTime);
+        }
+    }
+
+    private void FireProjectile()
+    {
+        // Instantiate a projectile at the firePoint position and rotation
+        Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+
+        // Set the next fire time based on the cooldown
+        nextFireTime = Time.time + fireCooldown;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            TakeDamage(1); // Adjust the damage value as needed
+        }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+
+        if (currentHealth <= 0)
+        {
+            Die(); // Call the Die method when health is depleted
+        }
+    }
+
+    private void Die()
+    {
+        // You can add any death animations or effects here
+
+        // For now, let's reload the main menu scene
+        SceneManager.LoadScene("MainMenu"); // Replace "MainMenu" with the actual name of your main menu scene
+    }
+}
