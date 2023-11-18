@@ -1,0 +1,26 @@
+using UnityEngine;
+using UnityEngine.UI;
+
+public class HealButtonScript : MonoBehaviour
+{
+    public PlayerScript playerScript; // Reference to the PlayerScript
+    public PlayerGold playerGold;     // Reference to the PlayerGold script
+
+    private void Start()
+    {
+        // Find the PlayerScript and PlayerGold components
+        playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerScript>();
+        playerGold = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerGold>();
+    }
+
+    public void OnHealButtonClick()
+    {
+        // Check if the player has enough gold to heal
+        if (playerGold != null && playerGold.GetGoldAmount() >= 10)
+        {
+            // Increase player health and deduct 1 gold
+            playerScript.Heal(1);
+            playerGold.AddGold(-10); // Deduct 10 gold
+        }
+    }
+}
