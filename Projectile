@@ -5,10 +5,26 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     public float speed = 5f; // Adjust the speed as needed
+    public int damage = 1;   // Amount of damage to inflict
 
     void Update()
     {
         // Move the projectile to the right
         transform.Translate(Vector2.right * speed * Time.deltaTime);
+    }
+    // Called when the projectile collides with another collider
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        // Check if the collision is with an enemy
+        EnemyScript enemy = other.GetComponent<EnemyScript>();
+
+        // If the collision is with an enemy, apply damage
+        if (enemy != null)
+        {
+            enemy.TakeDamage(damage);
+
+            // Destroy the projectile after hitting an enemy
+            Destroy(gameObject);
+        }
     }
 }
