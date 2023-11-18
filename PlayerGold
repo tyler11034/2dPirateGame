@@ -1,0 +1,34 @@
+using UnityEngine;
+using UnityEngine.UI;
+
+public class PlayerGold : MonoBehaviour
+{
+    public Text goldText;
+    private int goldAmount = 0;
+
+    void Start()
+    {
+        UpdateGoldText();
+    }
+
+    void UpdateGoldText()
+    {
+        goldText.text = "Gold: " + goldAmount;
+    }
+
+    public void AddGold(int amount)
+    {
+        goldAmount += amount;
+        UpdateGoldText();
+    }
+
+    public Text GetGoldText()
+    {
+        return goldText;
+    }
+
+    public int GetGoldAmount()
+    {
+        return goldAmount;
+    }
+}
