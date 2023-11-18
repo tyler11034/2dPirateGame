@@ -1,0 +1,33 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class EnemySpawner : MonoBehaviour
+{
+    public GameObject enemyPrefab;
+    public float spawnInterval = 2f;
+    public int maxEnemies = 10;
+
+    private float nextSpawnTime;
+    private int spawnedEnemies;
+
+    void Start()
+    {
+        nextSpawnTime = Time.time + Random.Range(0f, spawnInterval); // Introduce a random delay for variety
+    }
+
+    void Update()
+    {
+        if (Time.time >= nextSpawnTime && spawnedEnemies < maxEnemies)
+        {
+            SpawnEnemy();
+            nextSpawnTime = Time.time + spawnInterval;
+        }
+    }
+
+    void SpawnEnemy()
+    {
+        Instantiate(enemyPrefab, transform.position, Quaternion.identity);
+        spawnedEnemies++;
+    }
+}
