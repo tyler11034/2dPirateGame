@@ -1,0 +1,57 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class GameManager : MonoBehaviour
+{
+    public static GameManager instance; // Singleton instance
+    private PlayerGold playerGoldScript; // Reference to the PlayerGold script
+
+    private void Awake()
+    {
+        // Ensure only one instance of the GameManager exists
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject); // Persist across scene changes
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    // Called when the GameManager is enabled
+    private void OnEnable()
+    {
+        // Find the PlayerGold script in the scene
+        playerGoldScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerGold>();
+    }
+
+    public void AddGold(int amount)
+    {
+        if (playerGoldScript != null)
+        {
+            playerGoldScript.AddGold(amount); // Add gold through the PlayerGold script
+            UpdateUI(); // Update the UI whenever gold changes
+        }
+        else
+        {
+            Debug.LogWarning("PlayerGold script not found. Make sure the player has the PlayerGold script attached.");
+        }
+    }
+
+    private void UpdateUI()
+    {
+        // Retrieve the goldText from the PlayerGold script
+        Text goldText = playerGoldScript.GetGoldText();
+
+        // Check if goldText is not null before updating
+        if (goldText != null)
+        {
+            // Add code to update your UI element with the current gold amount
+            goldText.text = "Gold: " + playerGoldScript.GetGoldAmount();
+        }
+    }
+}
