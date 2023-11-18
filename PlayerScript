@@ -14,6 +14,7 @@ public class PlayerScript : MonoBehaviour
     public float projectileSpeed = 10f; // Speed of the projectiles
     public float fireCooldown = 1f;     // Cooldown period between firing projectiles
     private float nextFireTime;         // Time when the player can fire again
+    private int damage = 1;
 
     private void Start()
     {
@@ -98,6 +99,18 @@ public class PlayerScript : MonoBehaviour
         // You can add any death animations or effects here
 
         // For now, let's reload the main menu scene
-        SceneManager.LoadScene("MainMenu"); // Replace "MainMenu" with the actual name of your main menu scene
+        SceneManager.LoadScene("DeathScene"); // Replace "MainMenu" with the actual name of your main menu scene
+    }
+
+    public void Heal(int amount)
+    {
+        // Increase player health
+        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+    }
+
+    public void IncreaseDamage()
+    {
+        // Increase player damage
+        damage++;
     }
 }
