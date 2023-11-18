@@ -1,0 +1,25 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class IncreaseDamageButtonScript : MonoBehaviour
+{
+    public PlayerScript playerScript; // Reference to the PlayerScript
+    public PlayerGold playerGold;
+
+    private void Start()
+    {
+        // Find the PlayerScript component
+        playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerScript>();
+    }
+
+    public void OnIncreaseDamageButtonClick()
+    {
+        // Increase player damage on button click
+        if (playerGold != null &&  playerGold.GetGoldAmount() >= 10)
+        {
+            playerScript.IncreaseDamage();
+            playerGold.AddGold(-10); // Deduct 10 gold           
+        }
+    }
+}
