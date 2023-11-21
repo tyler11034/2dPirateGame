@@ -1,0 +1,32 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine.UI;
+
+public class ScoreManager : MonoBehaviour
+{
+    public Text scoreText; // Reference to the Text component displaying the score
+    private int score = 0; // The player's score
+
+    private void Start()
+    {
+        UpdateScoreText(); // Initialize the score text
+    }
+
+    // Call this method when an enemy dies to increase the player's score
+    public void IncreaseScore(int points)
+    {
+        score += points;
+        UpdateScoreText();
+    }
+
+    private void UpdateScoreText()
+    {
+        // Update the score text with the current score value
+        if (scoreText != null)
+        {
+            scoreText.text = "Score: " + score;
+        }
+    }
+}
