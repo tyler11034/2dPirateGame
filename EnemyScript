@@ -10,7 +10,7 @@ public class EnemyScript : MonoBehaviour
     public float moveSpeed = 2f;    // Forward and backward movement speed
     public float turnSpeed = 100f;  // Turning speed
 
-    public PlayerGold goldText;
+    
 
     private Transform player;       // Reference to the player's transform
 
@@ -63,13 +63,14 @@ public class EnemyScript : MonoBehaviour
 
     private void Die()
     {
-        if (goldText != null)
+        ScoreManager scoreManager = FindObjectOfType<ScoreManager>();
+        if (scoreManager != null)
         {
-            goldText.AddGold(1); // Assuming you want to add 1 gold on enemy death
+            scoreManager.IncreaseScore(1);
         }
 
         // You can add any death animations or effects here
         Destroy(gameObject);
-        SceneManager.LoadScene("UpgradeScene");
+        //SceneManager.LoadScene("UpgradeScene");
     }
 }
