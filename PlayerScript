@@ -15,6 +15,12 @@ public class PlayerScript : MonoBehaviour
     public float fireCooldown = 1f;     // Cooldown period between firing projectiles
     private float nextFireTime;         // Time when the player can fire again
     private int damage = 1;
+    public Transform rightFirePoint1;
+    public Transform rightFirePoint2;
+    public Transform rightFirePoint3;
+    public Transform leftFirePoint1;
+    public Transform leftFirePoint2;
+    public Transform leftFirePoint3;
 
     private void Start()
     {
@@ -67,10 +73,24 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
+    private void InstantiateProjectile(Transform firePoint)
+    {
+        GameObject projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+        Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
+        rb.velocity = firePoint.right * projectileSpeed;
+    }
+
     private void FireProjectile()
     {
-        // Instantiate a projectile at the firePoint position and rotation
-        Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+        // Instantiate 3 projectiles to the right of the player
+        InstantiateProjectile(rightFirePoint1);
+        InstantiateProjectile(rightFirePoint2);
+        InstantiateProjectile(rightFirePoint3);
+
+        // Instantiate 3 projectiles to the left of the player
+        InstantiateProjectile(leftFirePoint1);
+        InstantiateProjectile(leftFirePoint2);
+        InstantiateProjectile(leftFirePoint3);
 
         // Set the next fire time based on the cooldown
         nextFireTime = Time.time + fireCooldown;
