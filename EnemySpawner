@@ -1,75 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class EnemyScript : MonoBehaviour
+public class EnemySpawner : MonoBehaviour
 {
-    public int maxHealth = 3;       // Maximum health of the enemy
-    private int currentHealth;       // Current health of the enemy
-    public float moveSpeed = 2f;    // Forward and backward movement speed
-    public float turnSpeed = 100f;  // Turning speed
+    public GameObject enemyPrefab;
+    public float spawnInterval = 2f;
+    public int maxEnemies = 10;
 
-    public PlayerGold goldText;
+    private float nextSpawnTime;
+    private int spawnedEnemies;
 
-    private Transform player;       // Reference to the player's transform
-
-    private void Start()
+    void Start()
     {
-        currentHealth = maxHealth; // Initialize health
-        player = GameObject.FindGameObjectWithTag("Player").transform; // Find the player's transform
+        nextSpawnTime = Time.time + Random.Range(0f, spawnInterval); // Introduce a random delay for variety
     }
 
-    private void Update()
+    void Update()
     {
-        ChasePlayer(); // Call the ChasePlayer method
-    }
-
-    private void ChasePlayer()
-    {
-        if (player != null)
+        if (Time.time >= nextSpawnTime && spawnedEnemies < maxEnemies)
         {
-            // Calculate the direction to the player
-            Vector2 direction = player.position - transform.position;
-
-            // Calculate the angle between the enemy's forward and the direction to the player
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
-
-            // Rotate the enemy towards the player
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, angle), turnSpeed * Time.deltaTime);
-
-            // Move forward
-            transform.Translate(Vector2.up * moveSpeed * Time.deltaTime);
+            SpawnEnemy();
+            nextSpawnTime = Time.time + spawnInterval;
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    void SpawnEnemy()
     {
-        if (other.CompareTag("Projectile"))
-        {
-            TakeDamage(1); // Adjust the damage value as needed
-        }
-    }
-
-    public void TakeDamage(int damage)
-    {
-        currentHealth -= damage;
-
-        if (currentHealth <= 0)
-        {
-            Die(); // Call the Die method when health is depleted
-        }
-    }
-
-    private void Die()
-    {
-        if (goldText != null)
-        {
-            goldText.AddGold(1); // Assuming you want to add 1 gold on enemy death
-        }
-
-        // You can add any death animations or effects here
-        Destroy(gameObject);
-        SceneManager.LoadScene("UpgradeScene");
+        Instantiate(enemyPrefab, transform.position, Quaternion.identity);
+        spawnedEnemies++;
     }
 }
